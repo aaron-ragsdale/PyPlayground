@@ -53,11 +53,12 @@ if 'matplotlib.pyplot' in sys.modules:
         _manager.canvas.figure.savefig(_buffer, format='png', dpi=110, bbox_inches='tight')
         _plots.append(base64.b64encode(_buffer.getvalue()).decode('ascii'))
     plt.close('all')
-    json.dumps(_plots)
+    _plot_json = json.dumps(_plots)
 else:
-    '[]'
+    _plot_json = '[]'
+_plot_json
 `, { globals });
-    send('result', { id, output: lines.join('\n'), plots: JSON.parse(plotJson), error: false });
+    send('result', { id, output: lines.join('\n'), plots: JSON.parse(plotJson || '[]'), error: false });
   } catch (error) {
     send('result', { id, output: [...lines, String(error)].join('\n'), plots: [], error: true });
   } finally {
